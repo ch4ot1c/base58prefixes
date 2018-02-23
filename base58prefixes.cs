@@ -17,8 +17,8 @@ public class Program
     {*/
 
     //t1 (160)
-    //var a = 0x1C;
-    //var b = 0xB8;
+    var a = 0x1C;
+    var b = 0xB8;
 
     sb.AppendFormat("Version [{0},{1}] - {2}", a, b, GenerateZeroAddress((byte)a, (byte)b, 160));
     sb.AppendLine();
