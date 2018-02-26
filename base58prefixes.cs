@@ -20,19 +20,30 @@ public class Program
     var a = 0x1C;
     var b = 0xB8;
 
-    sb.AppendFormat("Version [{0},{1}] - {2}", a, b, GenerateZeroAddress((byte)a, (byte)b, 160));
+    sb.AppendFormat("Version [{0},{1}] -\nMin: {2}\nMax: {3}", a, b, GenerateAddress((byte)a, (byte)b, 160, false), GenerateAddress((byte)a, (byte)b, 160, true));
     sb.AppendLine();
     /*}*/
     string s=sb.ToString();
     Console.WriteLine(s);
   }
-  public static string GenerateZeroAddress(byte versionByte1, byte versionByte2, int width)
+
+  public static string GenerateAddress(byte versionByte1, byte versionByte2, int width, bool fFilled)
   {
-    //var width = 160 for pubkey/script t1/t3; 512 for zc
-    var hash=new byte[width/8]; //in a normal address, this would be a ripemd160(publickey)
+    //in a normal address, 'hash' would be a ripemd160(publickey)
+
+    //width=160 for pubkey/script t1/t3; 512 for zc
+    var hash=new byte[width/8];
+
+    if (fFilled) {
+  	  //maximum hash
+      for (int i = 0; i < hash.Length; i++)
+      {
+        hash[i] = 0xFF;
+      }
+    }
+  
     var bytes=new byte[width/8+2+4]; //include space for 2 version bytes and 4 checksum bytes
-    //hash is all 0s right now (dummy value)
-    //hash.CopyTo(bytes, 2); //not necessary for our case, but just for illustration
+    hash.CopyTo(bytes, 2);
     bytes[0]=versionByte1;
     bytes[1]=versionByte2;
 
